@@ -1,15 +1,15 @@
 import numpy as np
-#
-# def sigmoid(x):
-# 	return 1 / (1 +np.exp(-x))
-#
-# def sigmoidPrime(x):
-# 	return sigmoid(x)*(1-sigmoid(x))
-#
+
 def sigmoid(x):
-	return x / (1 +abs(x))
+	return 1 / (1 +np.exp(-x))
+
 def sigmoidPrime(x):
-	return 1/((1-abs(x))**2)
+	return sigmoid(x)*(1-sigmoid(x))
+
+# def sigmoid(x):
+# 	return x / (1 +abs(x))
+# def sigmoidPrime(x):
+# 	return 1/((1-abs(x))**2)
 
 #
 # def sigmoid(x):
@@ -61,10 +61,15 @@ class MLP(object):
 		grads_w = [np.zeros(w.shape) for w in self.weights]
 		X = trainingData[0]
 		Y = trainingData[1]
+		wprev = self.weights[:]
+		bprev = self.biases[:]
 		for i in range(epochs):
 			d_grads_w,d_grads_b = self.backpropagation(X,Y)
-			self.weights = [w-eta*nw for w, nw in zip(self.weights, d_grads_w)]
-			self.biases =  [b-eta*nb for b, nb in zip(self.biases, d_grads_b)]
+			self.weights = [w-eta*nw + wp*0 for w, nw,wp in zip(self.weights, d_grads_w,wprev)]
+			#self.weights = [w + wp*0.5 for w, wp in zip(self.weights, wprev]
+			wprev = self.weights[:]
+			self.biases =  [b-eta*nb + bp*0 for b, nb,bp in zip(self.biases, d_grads_b,bprev)]
+			bprev = self.biases[:]
 			# for x,y in zip(trainingData[0],trainingData[1]):
 			# 	d_grads_w,d_grads_b = self.backpropagation(x,y)
 			# 	grads_b = [nb+dnb for nb, dnb in zip(grads_b, d_grads_b)]
@@ -84,21 +89,24 @@ class MLP(object):
 		return J
 
 def main():
-	DATA = np.genfromtxt('dota2Train.csv',delimiter=',')
-	#DATA = np.genfromtxt('data.txt',delimiter=',')
-	num_samples = DATA.shape[0]
+	#DATA = np.genfromtxt('dota2Train.csv',delimiter=',')
+	#DATA = np.genfromtxt('winequality-red.csv',delimiter=';')
+	#num_samples = DATA.shape[0]
 
-	#X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.]])
-	#Y = np.array([[0,1,0,0]]).T
-	X2 = np.delete(DATA,0,1)#[0:10000]
-	Y2 = DATA.take(0,1).reshape((num_samples,1))#[0:10000]
-	trainingData = [X2,Y2]
+	X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.]])
+	Y = np.array([[0,1,1,0]]).T
+
+	#X2 = np.delete(DATA,0,1)#[0:10000]
+	#Y2 = DATA.take(0,1).reshape((num_samples,1))#[0:10000]
+
+	trainingData = [X,Y]
 	#trainingData = zip(X,Y)
-	print(X2.shape)
-	print(Y2.shape)
-	archMLP = [116,20,20,1]
+	#print(X2.shape)
+	#print(Y2.shape)
+	archMLP = [2,3,1]
 	mlp = MLP(archMLP)
-	mlp.train(trainingData,3000000,0.5)
+	mlp.train(trainingData,30000,5)
+	print(mlp.feedForward(X))
 
 	#mlp.think()
 if __name__ == '__main__':

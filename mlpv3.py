@@ -6,7 +6,6 @@ import numpy as np
 # def sigmoidPrime(x):
 # 	return sigmoid(x)*(1-sigmoid(x))
 
-
 def sigmoid(x):
 	return x / (1 +abs(x))
 def sigmoidPrime(x):
@@ -91,17 +90,17 @@ def main():
 	#DATA = np.genfromtxt('data.txt',delimiter=',')
 	num_samples = DATA.shape[0]
 
-	#X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.]])
-	#Y = np.array([[0,1,0,0]]).T
+	X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.]])
+	Y = np.array([[0,1,0,0]]).T
 	X2 = np.delete(DATA,0,1)#[0:10000]
 	Y2 = DATA.take(0,1).reshape((num_samples,1))#[0:10000]
-	trainingData = [X2,Y2]
+	trainingData = [X,Y]
 	#trainingData = zip(X,Y)
 	print(X2.shape)
 	print(Y2.shape)
-	archMLP = [116,80,80,1]
+	archMLP = [2,3,1]
 	mlp = MLP(archMLP)
-	mlp.train(trainingData,3000000,0.12,92650)
+	mlp.train(trainingData,3000000,0.2,4)
 
 if __name__ == '__main__':
 	main()

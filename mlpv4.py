@@ -1,16 +1,16 @@
 import numpy as np
 #
-def sigmoid(x):
-	return 1 / (1 +np.exp(-x))
-
-def sigmoidPrime(x):
-	return sigmoid(x)*(1-sigmoid(x))
+# def sigmoid(x):
+# 	return 1 / (1 +np.exp(-x))
+#
+# def sigmoidPrime(x):
+# 	return sigmoid(x)*(1-sigmoid(x))
 
 #
-# def sigmoid(x):
-# 	return x / (1 +abs(x))
-# def sigmoidPrime(x):
-# 	return 1/((1-abs(x))**2)
+def sigmoid(x):
+	return x / (1 +abs(x))
+def sigmoidPrime(x):
+	return 1/((1-abs(x))**2)
 
 class MLP(object):
 	def __init__(self,arch):
@@ -88,16 +88,17 @@ class MLP(object):
 
 def main():
 	DATA = np.genfromtxt('dota2Train.csv',delimiter=',')
+	TEST = np.genfromtxt('dota2Test.csv',delimiter=',')
 	num_samples = DATA.shape[0]
+	num_test = TEST.shape[0]
+	#X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.]])
+	#Y = np.array([[0,1,1,0]]).T
+	Xtest = np.delete(TEST,0,1)#[0:10000]
+	Ytest = TEST.take(0,1).reshape((num_test,1))#[0:10000]
 
-	X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.]])
-	Y = np.array([[0,1,1,0]]).T
 	X2 = np.delete(DATA,0,1)#[0:10000]
 	Y2 = DATA.take(0,1).reshape((num_samples,1))#[0:10000]
-	for i in range(len(Y2)):
-		if(Y2[i] == -1):
-			Y2[i]=0
-	#print(Y2[0:100])
+
 	trainingData = [X2,Y2]
 	#trainingData = zip(X,Y)
 	print(X2.shape)
@@ -105,8 +106,9 @@ def main():
 	archMLP = [116,20,20,1]
 	#archMLP = [2,3,1]
 	mlp = MLP(archMLP)
-	mlp.train(trainingData,100000,0.5,850)
-	#mlp.feedForward(X)
+	mlp.train(trainingData,100,0.5,850)
+
+	print(mlp.feedForward(Xtest))
 	#mlp.think()
 if __name__ == '__main__':
 	main()
