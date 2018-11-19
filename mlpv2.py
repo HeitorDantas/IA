@@ -11,6 +11,12 @@ def sigmoid(x):
 def sigmoidPrime(x):
 	return 1/((1-abs(x))**2)
 
+#
+# def sigmoid(x):
+# 	return np.tanh(x)
+# def sigmoidPrime(x):
+# 	return 1 - np.tanh(x)**2
+
 class MLP(object):
 	def __init__(self,arch):
 		self.ETA = 0.5
@@ -68,9 +74,9 @@ class MLP(object):
 			# print(self.feedForward(X))
 			# cost =self.cost(X,Y)
 			# print(cost)
-			if(i % 10000 == 0):
+			if(i % 10 == 0):
 				print(self.cost(X,Y))
-				print(self.feedForward(X))
+				#print(self.feedForward(X))
 
 	def cost(self,X,Y):
 		yhat = self.feedForward(X)
@@ -78,21 +84,21 @@ class MLP(object):
 		return J
 
 def main():
-	#DATA = np.genfromtxt('dota2Train.csv',delimiter=',')
-	DATA = np.genfromtxt('data.txt',delimiter=',')
+	DATA = np.genfromtxt('dota2Train.csv',delimiter=',')
+	#DATA = np.genfromtxt('data.txt',delimiter=',')
 	num_samples = DATA.shape[0]
 
 	#X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.]])
 	#Y = np.array([[0,1,0,0]]).T
-	X2 = np.delete(DATA,2,1)#[0:10000]
-	Y2 = DATA.take(2,1).reshape((num_samples,1))#[0:10000]
+	X2 = np.delete(DATA,0,1)#[0:10000]
+	Y2 = DATA.take(0,1).reshape((num_samples,1))#[0:10000]
 	trainingData = [X2,Y2]
 	#trainingData = zip(X,Y)
 	print(X2.shape)
 	print(Y2.shape)
-	archMLP = [2,5,5,1]
+	archMLP = [116,20,20,1]
 	mlp = MLP(archMLP)
-	mlp.train(trainingData,300000,0.2)
+	mlp.train(trainingData,3000000,0.5)
 
 	#mlp.think()
 if __name__ == '__main__':

@@ -87,21 +87,21 @@ class MLP(object):
 		return J
 
 def main():
-	#DATA = np.genfromtxt('dota2Train.csv',delimiter=',')
-	DATA = np.genfromtxt('data.txt',delimiter=',')
+	DATA = np.genfromtxt('dota2Train.csv',delimiter=',')
+	#DATA = np.genfromtxt('data.txt',delimiter=',')
 	num_samples = DATA.shape[0]
 
 	#X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.]])
 	#Y = np.array([[0,1,0,0]]).T
-	X2 = np.delete(DATA,2,1)#[0:10000]
-	Y2 = DATA.take(2,1).reshape((num_samples,1))#[0:10000]
+	X2 = np.delete(DATA,0,1)#[0:10000]
+	Y2 = DATA.take(0,1).reshape((num_samples,1))#[0:10000]
 	trainingData = [X2,Y2]
 	#trainingData = zip(X,Y)
 	print(X2.shape)
 	print(Y2.shape)
-	archMLP = [2,50,50,1]
+	archMLP = [116,80,80,1]
 	mlp = MLP(archMLP)
-	mlp.train(trainingData,300000,0.2,10)
+	mlp.train(trainingData,3000000,0.12,92650)
 
 if __name__ == '__main__':
 	main()
