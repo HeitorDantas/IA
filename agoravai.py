@@ -10,7 +10,7 @@ def sigmoidPrime(x):
 class MLP(object):
 
 	def __init__(self,arch):
-		self.ETA = 0.2
+		self.ETA = 0.4
 		self.numHiddenLayers = len(arch[1:-1])
 		self.hiddenLayerSizes = [x for x in arch[1:-1]]#it'll have to be a list for many hidden layers
 		self.inputSize = arch[0]
@@ -36,13 +36,13 @@ class MLP(object):
 		# activations = [X]
 		# print(self.biases[0].shape)
 
-		self.z2 = np.dot(X,self.weights[0]) + self.biases[0]
+		self.z2 = np.dot(X,self.weights[0]) + self.biases[0][0:X.shape[0]]
 		# auxBiases = self.biasMatrix(self.z2.shape,self.biases[0])
 		# self.z2 = self.z2 + auxBiases
 		# print(self.z2.shape)
 		self.a2 = sigmoid(self.z2)
 
-		self.z3 = np.dot(self.a2,self.weights[1]) + self.biases[1]
+		self.z3 = np.dot(self.a2,self.weights[1]) + self.biases[1][0:X.shape[0]]
 		# auxBiases = self.biasMatrix(self.z3.shape,self.biases[1])
 		# self.z3 = self.z3 + auxBiases
 		yhat = sigmoid(self.z3)#a3
@@ -81,13 +81,19 @@ class MLP(object):
 		return J
 def main():
 	DATA = np.genfromtxt('winequality-red.csv',delimiter=';')
+	TEST = np.genfromtxt('winequality-red-test.csv',delimiter=';')
 
 	num_samples = DATA.shape[0]
 	print(num_samples)
 	X = np.delete(DATA,11,1)#[0:100]
 	Y = DATA.take(11,1).reshape((num_samples,1))#[0:100]
 	Y = Y/10
-	archMLP = [11,5,1]
+
+	XT = np.delete(TEST,11,1)#[0:100]
+	YT = TEST.take(11,1).reshape((199,1))#[0:100]
+	YT = YT/10
+
+	archMLP = [11,20,1]
 
 	mlp = MLP(archMLP)
 
@@ -98,14 +104,27 @@ def main():
 	# 	 			[1,1]])
 	#
 	# Y = np.array([[0,1,1,0]]).T
-	# np.seterr(over='raise')
-	for i in range(0,10000):
+	#np.seterr(over='raise')
+	erroMin = 0.000005
+	for i in range(0,100000):
 		mlp.train(X,Y)
 		if i %10 == 0:
 			#print(mlp.feedForward(X))
-			print(mlp.cost(X,Y))
-	a = mlp.feedForward(X)
+			custo = mlp.cost(X,Y)
+			print(custo)
+			if(custo < erroMin):
+				break
+
+	a = mlp.feedForward(XT)
 	print(a)
+	a = np.round(10*a)
+	acertos = 0
+
+	for y,label in zip(a,10*YT):
+		print(y ," ==? ",label,"acertos : ",acertos,"/",199)
+		if y == label:
+			acertos+=1
+
 
 	np.savetxt('trainresult.out', a,delimiter=',')
 	np.savetxt('pesos2.out', mlp.weights[0],delimiter=',')

@@ -80,11 +80,14 @@ class MLP(object):
 		J = 0.5 * sum( (Y - yhat)**2 )
 		return J
 def main():
-	DATA = np.genfromtxt('winequality-red-test.csv',delimiter=';')
+	DATA = np.genfromtxt('winequality-red.csv',delimiter=';')
+	
+
 	p2 = np.genfromtxt('pesos2.out',delimiter=',')
 	p3 = np.genfromtxt('pesos3.out',delimiter=',')
 	b2 = np.genfromtxt('b2.out',delimiter=',')
 	b3 = np.genfromtxt('b3.out',delimiter=',')
+
 	num_samples = DATA.shape[0]
 	print(num_samples)
 	X = np.delete(DATA,11,1)#[0:100]
@@ -99,7 +102,7 @@ def main():
 	mlp.biases[0] = b2[0]
 	mlp.biases[1] = b3[0]
 
-	print(mlp.feedForward(X))
+	print(mlp.feedForward(X)[0:100])
 
 if __name__ == '__main__':
 	main()
