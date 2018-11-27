@@ -89,17 +89,17 @@ class MLP(object):
 		return J
 
 def main():
-	#DATA = np.genfromtxt('dota2Train.csv',delimiter=',')
-	#DATA = np.genfromtxt('winequality-red.csv',delimiter=';')
-	#num_samples = DATA.shape[0]
+	DATA = np.genfromtxt('dota2Train.csv',delimiter=',')
+	DATA = np.genfromtxt('winequality-red.csv',delimiter=';')
+	num_samples = DATA.shape[0]
 
 	X = np.array([[0.,0.],[0.,1.],[1.,0.],[1.,1.]])
 	Y = np.array([[0,1,1,0]]).T
 
-	#X2 = np.delete(DATA,0,1)#[0:10000]
-	#Y2 = DATA.take(0,1).reshape((num_samples,1))#[0:10000]
+	X2 = np.delete(DATA,0,1)#[0:10000]
+	Y2 = DATA.take(0,1).reshape((num_samples,1))#[0:10000]
 
-	trainingData = [X,Y]
+	trainingData = [X2,Y2]
 	#trainingData = zip(X,Y)
 	#print(X2.shape)
 	#print(Y2.shape)
